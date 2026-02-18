@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчет экономии топлива - Cruise Control</title>
+    <link rel="stylesheet" href="/static/styles/index_style.css">
+</head>
+<body>
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+    <div class="container">
+        <div class="top-nav">
+            <a href="/">Cruise Control</a>
+        </div>
+        <div class="top-right">
+            <a href="/">Главная</a>
+            <a href="/about">О сервисе</a>
+            <a href="/help">Помощь</a>
+
+            <!-- Поиск по Enter -->
+            <form action="/" method="GET" class="search-form-top" onsubmit="return true;">
+                <select name="field" class="search-select-top">
+                    <option value="name" {{if eq .searchField "name"}}selected{{end}}>Наименование</option>
+                    <option value="price" {{if eq .searchField "price"}}selected{{end}}>Расход</option>
+                    <option value="power" {{if eq .searchField "power"}}selected{{end}}>Тип авто</option>
+                </select>
+                <input type="text" name="query" class="search-input-top" placeholder="Поиск по режимам..." value="{{.query}}" autocomplete="off">
+            </form>
+
+            <!-- Кнопка заявки как текстовая ссылка -->
+            <a href="/cart" class="cart-link-top">Заявка {{.cartCount}}</a>
+
+            <span class="lang">RU</span>
+        </div>
+    </div>
+</div>
+
+<!-- Черный хедер -->
+<header class="main-header">
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo">
+                <span class="logo-text">CRUISE CONTROL</span>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <a href="/">КАТАЛОГ</a>
+            <a href="/calc">КАЛЬКУЛЯТОР</a>
+            <a href="/stats">СТАТИСТИКА</a>
+            <a href="/about">О СЕРВИСЕ</a>
+        </nav>
+        <div class="header-right">
+            <span>А А А</span>
+        </div>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<main class="main-content">
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="section-header">
+            <h1 class="section-title">КАТАЛОГ РЕЖИМОВ ДВИЖЕНИЯ</h1>
+        </div>
+
+        <!-- Сетка карточек -->
+        <div class="cards-grid">
+            {{range .devices}}
+            <article class="card-lukoil">
+                <div class="card-header">
+                    <h3 class="card-title">{{.Title}}</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="http://localhost:9000/services/{{.Photo}}" alt="{{.Title}}" class="card-image">
+                    <div class="card-overlay">
+                            <span class="badge-type {{.ServiceType}}">
+                                {{if eq .ServiceType "city"}}ГОРОД{{else if eq .ServiceType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+                            </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{.Description}}</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⛽ {{.Power}} л/100км</span>
+                        <span class="meta-item">💰 Экономия: {{if eq .ServiceType "city"}}5%{{else if eq .ServiceType "highway"}}15%{{else}}10%{{end}}</span>
+                    </div>
+                    <a href="/order/{{.ID}}" class="card-arrow">→</a>
+                </div>
+            </article>
+            {{else}}
+            <div class="no-results">
+                <p>Режимы не найдены</p>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2024 Cruise Control - Расчет экономии топлива</p>
+    </div>
+</footer>
+</body>
+</html>
