@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.driving_mode.ModeName}} — Cruise Control</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+    <div class="container">
+        <a href="/" class="logo-link">
+            <span class="logo-text">CRUISE CONTROL</span>
+        </a>
+    </div>
+</div>
+
+<!-- Wibes стиль - видео на весь экран -->
+<main class="wibes-page">
+    <div class="wibes-container">
+        <!-- Видео фон -->
+        <div class="wibes-video-wrapper">
+            <video class="wibes-video" autoplay muted loop playsinline>
+                <source src="http://localhost:9000/services/{{.driving_mode.VideoKey}}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+
+            <!-- Градиент поверх видео -->
+            <div class="wibes-overlay"></div>
+        </div>
+
+        <!-- Контент поверх видео -->
+        <div class="wibes-content">
+            <!-- Информация внизу -->
+            <div class="wibes-info">
+                <div class="wibes-header">
+                        <span class="wibes-badge {{.driving_mode.DrivingType}}">
+                            {{if eq .driving_mode.DrivingType "city"}}ГОРОД{{else if eq .driving_mode.DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+                        </span>
+                    <h1 class="wibes-title">{{.driving_mode.ModeName}}</h1>
+                </div>
+
+                <div class="wibes-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">⛽</span>
+                        <span class="stat-value">{{.driving_mode.BaseConsumption}} л/100км</span>
+                        <span class="stat-label">Расход</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">💰</span>
+                        <span class="stat-value">{{.driving_mode.EconomyPercent}}%</span>
+                        <span class="stat-label">Экономия</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🔖</span>
+                        <span class="stat-value">#{{.driving_mode.ID}}</span>
+                        <span class="stat-label">ID режима</span>
+                    </div>
+                </div>
+
+                <div class="wibes-description">
+                    <p>{{.driving_mode.Description}}</p>
+                </div>
+
+                {{if .has_route_info}}
+                <div class="wibes-route-info">
+                    <div class="route-row">
+                        <span class="route-label">📍 Откуда:</span>
+                        <span class="route-value">{{.route_info.Origin}}</span>
+                    </div>
+                    <div class="route-row">
+                        <span class="route-label">📍 Куда:</span>
+                        <span class="route-value">{{.route_info.Destination}}</span>
+                    </div>
+                    <div class="route-row highlight">
+                        <span class="route-label">💵 Экономия:</span>
+                        <span class="route-value">{{printf "%.2f" .route_info.FuelSaved}} л</span>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2026 Cruise Control - Расчет экономии топлива</p>
+    </div>
+</footer>
+</body>
+</html>

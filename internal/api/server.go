@@ -1,9 +1,10 @@
-package api
+﻿package api
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"log"
 	"web_backend/internal/app/handler"
 	"web_backend/internal/app/repository"
 )
@@ -13,19 +14,19 @@ func StartServer() {
 
 	repo, err := repository.NewRepository()
 	if err != nil {
-		logrus.Error("Ошибка инициализация репозитория")
+		logrus.Error("Ошибка инициализации репозитория")
 	}
 
-	handler := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 
 	r := gin.Default()
 
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/static", "./resources")
 
-	r.GET("/", handler.GetDevices)
-	r.GET("/order/:id", handler.GetDevice)
-	r.GET("/cart", handler.GetCart)
+	r.GET("/", h.GetDrivingModes)
+	r.GET("/mode/:id", h.GetDrivingMode)
+	r.GET("/fuel_consumption/:id", h.GetFuelConsumption)
 
 	r.Run()
 	log.Println("Server down")

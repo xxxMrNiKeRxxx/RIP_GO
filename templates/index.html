@@ -4,89 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расчет экономии топлива - Cruise Control</title>
-    <link rel="stylesheet" href="/static/styles/index_style.css">
+    <link rel="stylesheet" href="/static/styles/styles.css">
 </head>
 <body>
 <!-- Верхняя красная полоса -->
 <div class="top-red-bar">
     <div class="container">
-        <div class="top-nav">
-            <a href="/">Cruise Control</a>
-        </div>
-        <div class="top-right">
-            <a href="/">Главная</a>
-            <a href="/about">О сервисе</a>
-            <a href="/help">Помощь</a>
+        <a href="/" class="logo-link">
+            <span class="logo-text">CRUISE CONTROL</span>
+        </a>
+    </div>
+</div>
 
-            <!-- Поиск по Enter -->
-            <form action="/" method="GET" class="search-form-top" onsubmit="return true;">
-                <select name="field" class="search-select-top">
-                    <option value="name" {{if eq .searchField "name"}}selected{{end}}>Наименование</option>
-                    <option value="price" {{if eq .searchField "price"}}selected{{end}}>Расход</option>
-                    <option value="power" {{if eq .searchField "power"}}selected{{end}}>Тип авто</option>
-                </select>
-                <input type="text" name="query" class="search-input-top" placeholder="Поиск по режимам..." value="{{.query}}" autocomplete="off">
+<!-- Черная полоса с поиском и заявкой -->
+<div class="toolbar">
+    <div class="container">
+        <!-- Поиск (справа) -->
+        <div class="toolbar-right">
+            <form action="/" method="GET" class="search-form">
+                <!-- Скрытое поле для автоматического определения поля поиска -->
+                <input type="hidden" name="field" id="search-field" value="{{.searchField}}">
+                <input type="text" name="search" class="search-input" placeholder="Поиск..." value="{{.search}}" autocomplete="off">
+                <button type="submit" class="search-btn">Найти</button>
             </form>
 
-            <!-- Кнопка заявки как текстовая ссылка -->
-            <a href="/cart" class="cart-link-top">Заявка {{.cartCount}}</a>
+            <!-- Разделитель -->
+            <div class="toolbar-divider"></div>
 
-            <span class="lang">RU</span>
+            <!-- Кнопка заявки -->
+            <a href="/fuel_consumption/1" class="cart-icon" title="Заявка">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+                <span class="cart-count">{{.routes_count}}</span>
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Черный хедер -->
-<header class="main-header">
-    <div class="container">
-        <div class="logo-section">
-            <div class="logo">
-                <span class="logo-text">CRUISE CONTROL</span>
-            </div>
-        </div>
-        <nav class="main-nav">
-            <a href="/">КАТАЛОГ</a>
-            <a href="/calc">КАЛЬКУЛЯТОР</a>
-            <a href="/stats">СТАТИСТИКА</a>
-            <a href="/about">О СЕРВИСЕ</a>
-        </nav>
-        <div class="header-right">
-            <span>А А А</span>
-        </div>
-    </div>
-</header>
-
 <!-- Основной контент -->
 <main class="main-content">
     <div class="container">
-        <!-- Заголовок -->
-        <div class="section-header">
-            <h1 class="section-title">КАТАЛОГ РЕЖИМОВ ДВИЖЕНИЯ</h1>
-        </div>
+        <h1 class="section-title">КАТАЛОГ РЕЖИМОВ ДВИЖЕНИЯ</h1>
 
-        <!-- Сетка карточек -->
         <div class="cards-grid">
-            {{range .devices}}
+            {{range .driving_modes}}
             <article class="card-lukoil">
                 <div class="card-header">
-                    <h3 class="card-title">{{.Title}}</h3>
+                    <h3 class="card-title">{{.ModeName}}</h3>
                 </div>
-                <div class="card-image-wrapper">
-                    <img src="http://localhost:9000/services/{{.Photo}}" alt="{{.Title}}" class="card-image">
-                    <div class="card-overlay">
-                            <span class="badge-type {{.ServiceType}}">
-                                {{if eq .ServiceType "city"}}ГОРОД{{else if eq .ServiceType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+
+                <a href="/mode/{{.ID}}" class="card-link-full">
+                    <div class="card-image-wrapper">
+                        <img src="http://localhost:9000/services/{{.ImageKey}}" alt="{{.ModeName}}" class="card-image" crossorigin="anonymous">
+                        <span class="badge-type {{.DrivingType}}">
+                                {{if eq .DrivingType "city"}}ГОРОД{{else if eq .DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
                             </span>
                     </div>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{.Description}}</p>
-                    <div class="card-meta">
-                        <span class="meta-item">⛽ {{.Power}} л/100км</span>
-                        <span class="meta-item">💰 Экономия: {{if eq .ServiceType "city"}}5%{{else if eq .ServiceType "highway"}}15%{{else}}10%{{end}}</span>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="meta-item">⛽ {{.BaseConsumption}} л/100км</span>
+                            <span class="meta-item">💰 Экономия: {{.EconomyPercent}}%</span>
+                        </div>
                     </div>
-                    <a href="/order/{{.ID}}" class="card-arrow">→</a>
-                </div>
+                </a>
             </article>
             {{else}}
             <div class="no-results">
@@ -99,8 +82,34 @@
 
 <footer class="main-footer">
     <div class="container">
-        <p>&copy; 2024 Cruise Control - Расчет экономии топлива</p>
+        <p>&copy; 2026 Cruise Control - Расчет экономии топлива</p>
     </div>
 </footer>
+
+<!-- Скрипт для автоматического определения поля поиска -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('.search-input');
+        const searchField = document.getElementById('search-field');
+        const searchForm = document.querySelector('.search-form');
+
+        searchForm.addEventListener('submit', function(e) {
+            const value = searchInput.value.trim();
+
+            // Автоматическое определение поля поиска
+            if (value !== '') {
+                if (isNumeric(value)) {
+                    searchField.value = 'consumption';
+                } else {
+                    searchField.value = 'name';
+                }
+            }
+        });
+
+        function isNumeric(str) {
+            return !isNaN(parseFloat(str)) && isFinite(str);
+        }
+    });
+</script>
 </body>
 </html>
