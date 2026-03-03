@@ -91,28 +91,7 @@
             </table>
         </div>
 
-        <!-- Детальный расчет -->
-        <div class="calculation-summary">
-            <h3>ДЕТАЛЬНЫЙ РАСЧЕТ ЭКОНОМИИ</h3>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <span>Общий расход без круиз-контроля:</span>
-                    <strong id="total-without-cruise">{{.total_without_cruise}} л</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Общий расход с круиз-контролем:</span>
-                    <strong id="total-with-cruise">{{.total_with_cruise}} л</strong>
-                </div>
-                <div class="summary-item highlight">
-                    <span>Экономия топлива:</span>
-                    <strong id="fuel-saved">{{.fuel_saved}} л ({{.percent_saved}}%)</strong>
-                </div>
-                <div class="summary-item highlight">
-                    <span>Экономия в рублях (при цене {{.fuel_price}} ₽/л):</span>
-                    <strong id="money-saved">{{.money_saved}} ₽</strong>
-                </div>
-            </div>
-        </div>
+
     </div>
 </main>
 
@@ -122,57 +101,6 @@
     </div>
 </footer>
 
-<!-- Скрипт для пересчета при изменении длины маршрута -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const distanceInputs = document.querySelectorAll('.distance-input');
-        const fuelPrice = {{.fuel_price}};
 
-        distanceInputs.forEach(function(input) {
-            input.addEventListener('input', function() {
-                const modeId = this.dataset.modeId;
-                const baseConsumption = parseFloat(this.dataset.baseConsumption);
-                const economyPercent = parseFloat(this.dataset.economyPercent);
-                const routeDistance = parseInt(this.value) || 0;
-
-                // Расчет для конкретной услуги
-                const fuelWithoutCruise = (baseConsumption / 100) * routeDistance;
-                const fuelSaved = fuelWithoutCruise * (economyPercent / 100);
-
-                // Обновляем значение экономии для строки
-                document.getElementById('fuel-saved-' + modeId).textContent = fuelSaved.toFixed(2) + ' л';
-
-                // Пересчитываем итоги
-                recalculateTotals();
-            });
-        });
-
-        function recalculateTotals() {
-            let totalWithoutCruise = 0;
-            let totalSaved = 0;
-
-            distanceInputs.forEach(function(input) {
-                const baseConsumption = parseFloat(input.dataset.baseConsumption);
-                const economyPercent = parseFloat(input.dataset.economyPercent);
-                const routeDistance = parseInt(input.value) || 0;
-
-                const fuelWithoutCruise = (baseConsumption / 100) * routeDistance;
-                const fuelSaved = fuelWithoutCruise * (economyPercent / 100);
-
-                totalWithoutCruise += fuelWithoutCruise;
-                totalSaved += fuelSaved;
-            });
-
-            const totalWithCruise = totalWithoutCruise - totalSaved;
-            const percentSaved = totalWithoutCruise > 0 ? (totalSaved / totalWithoutCruise) * 100 : 0;
-            const moneySaved = totalSaved * fuelPrice;
-
-            document.getElementById('total-without-cruise').textContent = totalWithoutCruise.toFixed(2) + ' л';
-            document.getElementById('total-with-cruise').textContent = totalWithCruise.toFixed(2) + ' л';
-            document.getElementById('fuel-saved').textContent = totalSaved.toFixed(2) + ' л (' + percentSaved.toFixed(1) + '%)';
-            document.getElementById('money-saved').textContent = moneySaved.toFixed(0) + ' ₽';
-        }
-    });
-</script>
 </body>
 </html>
