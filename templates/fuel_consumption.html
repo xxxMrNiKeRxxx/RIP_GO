@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка {{.fuel_consumption.ApplicationID}} — Cruise Control</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+    <div class="container">
+        <a href="/" class="logo-link">
+            <span class="logo-text">CRUISE CONTROL</span>
+        </a>
+    </div>
+</div>
+
+<!-- Основной контент -->
+<main class="main-content fuel_consumption-page">
+    <div class="container">
+        <!-- Поля заявки (сверху) -->
+        <div class="fuel_consumption-header">
+            <h1>ЗАЯВКА {{.fuel_consumption.ApplicationID}}</h1>
+            <div class="fuel_consumption-fields">
+                <div class="field-item">
+                    <span class="field-label">Дата создания:</span>
+                    <span class="field-value">{{.fuel_consumption.CreatedDate}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Статус:</span>
+                    <span class="field-value status">{{.fuel_consumption.Status}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Откуда:</span>
+                    <span class="field-value">{{.fuel_consumption.Origin}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Куда:</span>
+                    <span class="field-value">{{.fuel_consumption.Destination}}</span>
+                </div>
+                <div class="field-item result">
+                    <span class="field-label">📊 Результат вычислений:</span>
+                    <span class="field-value">{{.fuel_consumption.CalculationResult}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица с услугами (2 услуги с изображениями) -->
+        <div class="fuel_consumption-table">
+            <table class="services-table">
+                <thead>
+                <tr>
+                    <th class="col-image">Изображение</th>
+                    <th class="col-mode">Режим движения</th>
+                    <th class="col-type">Тип</th>
+                    <th class="col-consumption">Расход (л/100км)</th>
+                    <th class="col-distance">Длина (км)</th>
+                    <th class="col-fuel">Экономия (л)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .fuel_consumption_modes}}
+                <tr>
+                    <td class="col-image">
+                        <img src="http://localhost:9000/services/{{.Mode.ImageKey}}" alt="{{.Mode.ModeName}}" class="service-thumb" crossorigin="anonymous">
+                    </td>
+                    <td class="col-mode">{{.Mode.ModeName}}</td>
+                    <td class="col-type">
+                                <span class="mode-badge-small {{.Mode.DrivingType}}">
+                                    {{if eq .Mode.DrivingType "city"}}ГОРОД{{else if eq .Mode.DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+                                </span>
+                    </td>
+                    <td class="col-consumption">{{.Mode.BaseConsumption}}</td>
+                    <td class="col-distance">
+                        <input type="number"
+                               name="distance_{{.Mode.ID}}"
+                               value="{{.RouteDistance}}"
+                               min="1"
+                               class="distance-input"
+                               data-mode-id="{{.Mode.ID}}"
+                               data-base-consumption="{{.Mode.BaseConsumption}}"
+                               data-economy-percent="{{.Mode.EconomyPercent}}">
+                    </td>
+                    <td class="col-fuel">
+                        <span class="fuel-value" id="fuel-saved-{{.Mode.ID}}">{{printf "%.2f" .FuelSaved}} л</span>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2026 Cruise Control - Расчет экономии топлива</p>
+    </div>
+</footer>
+
+
+</body>
+</html>
