@@ -1,0 +1,3 @@
+service_host = "0.0.0.0"
+service_port = 8080
+minio_url = "http://localhost:9000/services"
