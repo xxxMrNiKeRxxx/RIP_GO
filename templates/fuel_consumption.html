@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка {{.fuel_consumption.ApplicationID}} — Cruise Control</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+    <div class="container">
+        <a href="/" class="logo-link">
+            <span class="logo-text">CRUISE CONTROL</span>
+        </a>
+    </div>
+</div>
+
+<!-- Черная полоса с поиском и заявкой -->
+<div class="toolbar">
+    <div class="container">
+        <div class="toolbar-right">
+            <form action="/" method="GET" class="search-form">
+                <input type="hidden" name="field" id="search-field" value="name">
+                <input type="text" name="search" class="search-input" placeholder="Поиск..." autocomplete="off">
+                <button type="submit" class="search-btn">Найти</button>
+            </form>
+
+            <div class="toolbar-divider"></div>
+
+            {{if .is_draft}}
+            <a href="/fuel_consumption/{{.fuel_consumption_id}}" class="cart-icon" title="Заявка">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+                <span class="cart-count">{{.routes_count}}</span>
+            </a>
+            {{else}}
+            <div class="cart-icon" style="opacity: 0.5; cursor: not-allowed;" title="Заявка удалена">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+                <span class="cart-count">{{.routes_count}}</span>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</div>
+
+<!-- Основной контент -->
+<main class="main-content fuel_consumption-page">
+    <div class="container">
+        <!-- Поля заявки (сверху) -->
+        <div class="fuel_consumption-header">
+            <h1>ЗАЯВКА {{.fuel_consumption.ApplicationID}}</h1>
+            <div class="fuel_consumption-fields">
+                <div class="field-item">
+                    <span class="field-label">ID заявки:</span>
+                    <span class="field-value">{{.fuel_consumption_id}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Статус:</span>
+                    <span class="field-value status">{{.fuel_consumption.Status}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Дата создания:</span>
+                    <span class="field-value">{{.fuel_consumption.CreatedAt.Format "02.01.2006 15:04"}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Откуда:</span>
+                    <span class="field-value">{{.fuel_consumption.Origin}}</span>
+                </div>
+                <div class="field-item">
+                    <span class="field-label">Куда:</span>
+                    <span class="field-value">{{.fuel_consumption.Destination}}</span>
+                </div>
+                <div class="field-item result">
+                    <span class="field-label">📊 Результат вычислений:</span>
+                    <span class="field-value">Экономия: {{.fuel_saved}} л ({{.percent_saved}}%) | {{.money_saved}} ₽</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица с услугами -->
+        <div class="fuel_consumption-table">
+            <table class="services-table">
+                <thead>
+                <tr>
+                    <th class="col-image">Изображение</th>
+                    <th class="col-mode">Режим движения</th>
+                    <th class="col-type">Тип</th>
+                    <th class="col-consumption">Расход (л/100км)</th>
+                    <th class="col-distance">Длина (км)</th>
+                    <th class="col-fuel">Экономия (л)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .fuel_consumption_modes}}
+                <tr>
+                    <td class="col-image">
+                        <img src="{{$.minioUrl}}/{{.Mode.ImageKey}}" alt="{{.Mode.ModeName}}" class="service-thumb" onerror="this.src='https://via.placeholder.com/80x60?text=No+Image'">
+                    </td>
+                    <td class="col-mode">{{.Mode.ModeName}}</td>
+                    <td class="col-type">
+                                <span class="mode-badge-small {{.Mode.DrivingType}}">
+                                    {{if eq .Mode.DrivingType "city"}}ГОРОД{{else if eq .Mode.DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+                                </span>
+                    </td>
+                    <td class="col-consumption">{{.Mode.BaseConsumption}}</td>
+                    <td class="col-distance">{{.RouteDistance}}</td>
+                    <td class="col-fuel">
+                        <span class="fuel-value">{{printf "%.2f" .FuelSaved}} л</span>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        {{if .is_draft}}
+        <!-- Кнопка удаления заявки (только для черновика) -->
+        <div style="margin-top: 30px; text-align: center;">
+            <form method="POST" action="/fuel_consumption/delete" onsubmit="return confirm('Вы уверены, что хотите удалить заявку?');">
+                <input type="hidden" name="fuel_consumption_id" value="{{.fuel_consumption_id}}">
+                <button type="submit" class="search-btn" style="background-color: #DB2B36;">Удалить заявку</button>
+            </form>
+        </div>
+        {{end}}
+    </div>
+</main>
+
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2026 Cruise Control - Расчет экономии топлива</p>
+    </div>
+</footer>
+</body>
+</html>
