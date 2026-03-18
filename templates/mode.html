@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{{.mode.ModeName}}</title>
+  <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body class="mode-detail-page">
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+  <div class="container">
+    <a href="/modes" class="logo-link"><span class="logo-text">CRUISE CONTROL</span></a>
+  </div>
+</div>
+
+<!-- Wibes стиль - видео на весь экран -->
+<main class="wibes-page">
+  <div class="wibes-container">
+    <!-- Видео фон -->
+    <div class="wibes-video-wrapper">
+      <!-- ТЕПЕРЬ КОРРЕКТНО ИСПОЛЬЗУЕТСЯ ПЕРЕМЕННАЯ {{.mode}} И КЛЮЧ VIDEO -->
+      <video class="wibes-video" autoplay muted loop playsinline>
+        <source src="{{.minioBase}}/{{.mode.VideoKey}}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+      <!-- Градиент поверх видео -->
+      <div class="wibes-overlay"></div>
+    </div>
+
+    <!-- Контент поверх видео -->
+    <div class="wibes-content">
+      <!-- Информация внизу -->
+      <div class="wibes-info">
+        <div class="wibes-header">
+          <!-- ТЕПЕРЬ КОРРЕКТНО ИСПОЛЬЗУЕТСЯ ПЕРЕМЕННАЯ {{.mode}} -->
+          <span class="wibes-badge {{.mode.DrivingType}}">
+                            {{if eq .mode.DrivingType "city"}}ГОРОД{{else if eq .mode.DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+                        </span>
+          <h1 class="wibes-title">{{.mode.ModeName}}</h1>
+        </div>
+        <div class="wibes-stats">
+          <div class="stat-item">
+            <span class="stat-icon">⛽</span>
+            <span class="stat-value">{{.mode.BaseConsumption}}</span>
+            <span class="stat-label">л/100км</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">📉</span>
+            <span class="stat-value">{{.mode.EconomyPercent}}%</span>
+            <span class="stat-label">ЭКОНОМИЯ</span>
+          </div>
+        </div>
+        <!-- ТЕПЕРЬ КОРРЕКТНО ИСПОЛЬЗУЕТСЯ ПЕРЕМЕННАЯ {{.mode}} -->
+        <div class="wibes-description">
+          <p>{{.mode.Description}}</p>
+        </div>
+      </div>
+      <!-- Правая колонка с действиями -->
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="main-footer">
+  <div class="container">
+    <p>&copy; 2026 Cruise Control. Все права защищены.</p>
+  </div>
+</footer>
+</body>
+</html>

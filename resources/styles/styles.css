@@ -1,0 +1,1202 @@
+@import url('https://fonts.googleapis.com/css2?family=Arial:wght@300;400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== ВЕРХНЯЯ КРАСНАЯ ПОЛОСА ===== */
+.top-red-bar {
+  background: #DB2B36;
+  color: white;
+  padding: 15px 0;
+}
+
+.top-red-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: white;
+}
+
+.logo-link:hover {
+  opacity: 0.9;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 1px;
+}
+
+/* ===== ЧЁРНАЯ ПАНЕЛЬ С ПОИСКОМ И ЗАЯВКОЙ ===== */
+.toolbar {
+  background: #000;
+  padding: 15px 0;
+}
+
+.toolbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search-form {
+  display: flex;
+  gap: 0;
+  background: white;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: none;
+  background: white;
+  color: #333;
+  font-size: 13px;
+  outline: none;
+  width: 250px;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-input:focus {
+  background: #fafafa;
+}
+
+.search-btn {
+  padding: 10px 25px;
+  background: #000;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.search-btn:hover {
+  background: #333;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 40px;
+  background: #333;
+}
+
+.cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: 2px solid #333;
+}
+
+.cart-icon:hover {
+  background: #2a2a2a;
+  border-color: #DB2B36;
+}
+
+.cart-icon svg {
+  stroke: white;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #DB2B36;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 50%;
+  min-width: 24px;
+  text-align: center;
+  border: 2px solid #1a1a1a;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+.main-content {
+  background: #fff;
+  flex: 1;
+  padding: 30px 0;
+  min-height: 600px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 30px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 30px;
+}
+
+/* ===== СЕТКА КАРТОЧЕК (2 КОЛОНКИ) ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.modes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card-lukoil {
+  background: #f5f5f5;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.card-lukoil:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.mode-card {
+  background: #f5f5f5;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.mode-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  background: #f0f0f0;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  margin: 0;
+}
+
+.card-link-full {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-link-full:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-image-wrapper {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-type {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 8px 15px;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.badge-type.city {
+  background: #1976d2;
+}
+
+.badge-type.highway {
+  background: #388e3c;
+}
+
+.badge-type.mixed {
+  background: #f57c00;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+}
+
+.meta-item {
+  font-size: 13px;
+  color: #333;
+  white-space: nowrap;  /* Чтобы не переносилось */
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* ===== КНОПКА ДОБАВИТЬ В ЗАЯВКУ ===== */
+.card-add-form {
+  margin: 0;
+  padding: 15px;
+  background: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+  text-align: right;
+  cursor: pointer; /* Показываем что область кликабельна */
+}
+
+.card-add-form:hover {
+  background: #f0f0f0;
+}
+
+.card-add-btn {
+  padding: 10px 20px;
+  background: #DB2B36;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-add-btn:hover {
+  background: #b91d19;
+  box-shadow: 0 4px 12px rgba(219, 43, 54, 0.3);
+  transform: translateY(-2px);
+}
+
+.card-add-btn:active {
+  background: #8a1512;
+  transform: translateY(0);
+}
+
+/* Ссылка на всю карточку */
+.card-link-full {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.card-lukoil {
+  background: #f5f5f5;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+  cursor: pointer; /* Показываем что вся карточка кликабельна */
+}
+
+.card-lukoil:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ===== СТРАНИЦА ДЕТАЛЕЙ (WIBES С ВИДЕО) ===== */
+.mode-detail-page {
+  background: #f5f5f5;
+}
+
+.mode-detail-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.mode-detail-video {
+  width: 100%;
+}
+
+.detail-video {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.mode-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mode-badge-large {
+  display: inline-block;
+  padding: 8px 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.mode-badge-large.city {
+  background: #1976d2;
+}
+
+.mode-badge-large.highway {
+  background: #388e3c;
+}
+
+.mode-badge-large.mixed {
+  background: #f57c00;
+}
+
+.mode-detail-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.mode-specs {
+  background: #f5f5f5;
+  padding: 20px;
+  border-left: 4px solid #DB2B36;
+  border-radius: 4px;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.spec-item:last-child {
+  border-bottom: none;
+}
+
+.spec-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.spec-value {
+  font-weight: 700;
+  color: #000;
+}
+
+.spec-value.economy {
+  color: #388e3c;
+  font-size: 16px;
+}
+
+.mode-separator {
+  border: none;
+  border-top: 2px solid #e0e0e0;
+  margin: 20px 0;
+}
+
+.mode-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.mode-description {
+  padding: 20px 0;
+}
+
+.mode-description h3 {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.mode-description p {
+  line-height: 1.8;
+  color: #666;
+  font-size: 14px;
+}
+
+.route-info-block {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+
+.route-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.route-info-row:last-child {
+  border-bottom: none;
+}
+
+.route-info-row--result {
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 4px;
+  border-left: 4px solid #388e3c;
+}
+
+.mode-actions {
+  margin-top: 20px;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 15px 40px;
+  background: #DB2B36;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background: #b91d19;
+}
+
+/* ===== СТРАНИЦА ЗАЯВКИ FUEL_CONSUMPTION ===== */
+.fuel_consumption-page {
+  background: #f5f5f5;
+}
+
+.fuel_consumption-header {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.fuel_consumption-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #DB2B36;
+}
+
+.fuel_consumption-fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.field-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.field-value.status {
+  color: #DB2B36;
+  text-transform: uppercase;
+}
+
+.field-item.result {
+  grid-column: 1 / -1;
+  background: #DB2B36;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.field-item.result .field-label,
+.field-item.result .field-value {
+  color: white;
+}
+
+.fuel_consumption-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 1fr;
+  gap: 15px;
+  padding: 15px 20px;
+  background: #f0f0f0;
+  border-radius: 8px 8px 0 0;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-bottom: 3px solid #DB2B36;
+}
+
+.table-col-mode {
+  font-weight: 700;
+}
+
+.table-col-type {
+  text-align: center;
+}
+
+.table-col-consumption {
+  text-align: center;
+}
+
+.table-col-distance {
+  text-align: center;
+}
+
+.table-col-fuel {
+  text-align: center;
+}
+
+.fuel_consumption-modes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fuel_consumption-mode-card {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 1fr;
+  gap: 15px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 0 0 8px 8px;
+  align-items: center;
+}
+
+.fuel_consumption-mode-card:first-child {
+  border-radius: 0;
+}
+
+.mode-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.mode-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mode-name {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.mode-badge-small {
+  display: inline-block;
+  padding: 4px 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.mode-badge-small.city {
+  background: #1976d2;
+}
+
+.mode-badge-small.highway {
+  background: #388e3c;
+}
+
+.mode-badge-small.mixed {
+  background: #f57c00;
+}
+
+.table-col-consumption,
+.table-col-fuel {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.distance-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.fuel-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #DB2B36;
+}
+
+.calculation-summary {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.calculation-summary h3 {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #DB2B36;
+  color: #000;
+}
+
+.summary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+  align-items: center;
+}
+
+.summary-item.highlight {
+  background: #e8f5e9;
+  border-left: 4px solid #388e3c;
+}
+
+.summary-item strong {
+  color: #DB2B36;
+  font-size: 16px;
+}
+
+.summary-item.highlight strong {
+  color: #388e3c;
+  font-size: 18px;
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+  background: #000;
+  color: white;
+  padding: 20px 0;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.main-footer p {
+  text-align: center;
+  font-size: 12px;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 1024px) {
+  .cards-grid,
+  .modes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mode-detail-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .fuel_consumption-fields {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fuel_consumption-table-header,
+  .fuel_consumption-mode-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .table-col-type,
+  .table-col-consumption,
+  .table-col-distance,
+  .table-col-fuel {
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .cards-grid,
+  .modes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar .container {
+    flex-direction: column;
+  }
+
+  .search-form {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .fuel_consumption-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .top-red-bar .container {
+    justify-content: center;
+  }
+}
+
+
+/* ===== ТАБЛИЦА УСЛУГ В ЗАЯВКЕ ===== */
+.fuel_consumption-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table thead {
+  background: #f0f0f0;
+  border-bottom: 3px solid #DB2B36;
+}
+
+.services-table th {
+  padding: 15px 12px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.services-table td {
+  padding: 15px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #333;
+}
+
+.services-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.col-image {
+  width: 100px;
+  text-align: center;
+}
+
+.service-thumb {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.col-mode {
+  width: 250px;
+  font-weight: 600;
+}
+
+.col-type {
+  width: 100px;
+  text-align: center;
+}
+
+.col-consumption {
+  width: 120px;
+  text-align: center;
+}
+
+.col-distance {
+  width: 100px;
+  text-align: center;
+}
+
+.col-fuel {
+  width: 120px;
+  text-align: center;
+  color: #DB2B36;
+  font-weight: 700;
+}
+
+.mode-badge-small {
+  display: inline-block;
+  padding: 4px 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.mode-badge-small.city {
+  background: #1976d2;
+}
+
+.mode-badge-small.highway {
+  background: #388e3c;
+}
+
+.mode-badge-small.mixed {
+  background: #f57c00;
+}
+
+/* ===== ПОЛЕ ВВОДА ДЛИНЫ МАРШРУТА ===== */
+.distance-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.distance-input:focus {
+  outline: none;
+  border-color: #DB2B36;
+  box-shadow: 0 0 4px rgba(219, 43, 54, 0.3);
+}
+
+.distance-input:hover {
+  border-color: #DB2B36;
+}
+
+.fuel-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #DB2B36;
+}
+
+
+/* ===== WIBES СТИЛЬ (TikTok/Reels) ===== */
+.wibes-page {
+  background: #000;
+  min-height: calc(100vh - 100px);
+  padding: 0;
+  flex: 1;
+}
+
+.wibes-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: calc(100vh - 150px);
+  min-height: 600px;
+}
+
+/* Видео на весь экран */
+.wibes-video-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.wibes-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wibes-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.3) 0%,
+          rgba(0,0,0,0.1) 50%,
+          rgba(0,0,0,0.8) 100%
+  );
+}
+
+/* Контент поверх видео */
+.wibes-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  padding: 40px;
+  gap: 30px;
+}
+
+/* Левая часть - информация */
+.wibes-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: white;
+  padding-bottom: 20px;
+}
+
+.wibes-header {
+  margin-bottom: 20px;
+}
+
+.wibes-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #DB2B36;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.wibes-badge.city { background: #1976d2; }
+.wibes-badge.highway { background: #388e3c; }
+.wibes-badge.mixed { background: #f57c00; }
+
+.wibes-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Статистика */
+.wibes-stats {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 11px;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+/* Описание */
+.wibes-description {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.wibes-description p {
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Информация о маршруте */
+.wibes-route-info {
+  background: rgba(219, 43, 54, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.route-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.route-row:not(:last-child) {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.route-row.highlight {
+  background: rgba(255,255,255,0.2);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.route-label {
+  font-weight: 600;
+}
+
+.route-value {
+  font-weight: 700;
+}
+
+/* Правая часть - кнопки действий */
+.wibes-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 15px 10px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.action-icon {
+  font-size: 24px;
+}
+
+.action-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ===== АДАПТИВНОСТЬ WIBES ===== */
+@media (max-width: 768px) {
+  .wibes-content {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .wibes-actions {
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .wibes-title {
+    font-size: 24px;
+  }
+
+  .wibes-stats {
+    gap: 15px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}

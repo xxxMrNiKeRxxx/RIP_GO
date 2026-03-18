@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог режимов движения — Cruise Control</title>
+  <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+<!-- Верхняя красная полоса -->
+<div class="top-red-bar">
+  <div class="container">
+    <a href="/modes" class="logo-link">
+      <span class="logo-text">CRUISE CONTROL</span>
+    </a>
+  </div>
+</div>
+
+<!-- Черная полоса с поиском и заявкой -->
+<div class="toolbar">
+  <div class="container">
+    <div class="toolbar-right">
+      <form action="/modes" method="GET" class="search-form">
+        <input type="hidden" name="field" id="search-field" value="name">
+        <input type="text" name="query" class="search-input" placeholder="Поиск..." value="{{.query}}" autocomplete="off">
+        <button type="submit" class="search-btn">Найти</button>
+      </form>
+
+      <div class="toolbar-divider"></div>
+
+      {{if .consumptionID}}
+      <a href="/fuel-consumption/{{.consumptionID}}" class="cart-icon" title="Заявка">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+        <span class="cart-count">{{.cartCount}}</span>
+      </a>
+      {{else}}
+      <div class="cart-icon" style="opacity: 0.5; cursor: not-allowed;" title="Сначала создайте заявку">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+        <span class="cart-count">0</span>
+      </div>
+      {{end}}
+    </div>
+  </div>
+</div>
+
+<!-- Основной контент -->
+<main class="main-content">
+  <div class="container">
+    <h1 class="section-title">КАТАЛОГ РЕЖИМОВ ДВИЖЕНИЯ</h1>
+
+    <div class="cards-grid">
+      {{range .modes}}
+      <article class="card-lukoil">
+        <div class="card-header">
+          <h3 class="card-title">{{.ModeName}}</h3>
+        </div>
+
+        <a href="/mode/{{.ModeID}}" class="card-link-full">
+          <div class="card-image-wrapper">
+            <!-- ✅ ПРАВИЛЬНЫЙ ПУТЬ К КАРТИНКЕ -->
+            <img src="{{$.minioBase}}/{{.ImageKey}}" alt="{{.ModeName}}" class="card-image" crossorigin="anonymous" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <span class="badge-type {{.DrivingType}}">
+              {{if eq .DrivingType "city"}}ГОРОД{{else if eq .DrivingType "highway"}}ТРАССА{{else}}СМЕШАННЫЙ{{end}}
+            </span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="meta-item">⛽ {{.BaseConsumption}} л/100км</span>
+              <span class="meta-item">💰 Экономия: {{.EconomyPercent}}%</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- ✅ ИСПРАВЛЕНО: Правильный маршрут для добавления в заявку -->
+        <form method="POST" action="/api/fuel-consumption-modes/add/{{.ModeID}}" class="card-add-form">
+          <input type="hidden" name="mode_id" value="{{.ModeID}}">
+          <input type="hidden" name="route_distance" value="300">
+          <button type="submit" class="card-add-btn">Добавить в заявку</button>
+        </form>
+      </article>
+      {{else}}
+      <div class="no-results">
+        <p>Режимы не найдены</p>
+      </div>
+      {{end}}
+    </div>
+  </div>
+</main>
+
+<footer class="main-footer">
+  <div class="container">
+    <p>&copy; 2026 Cruise Control - Расчет экономии топлива</p>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    const searchField = document.getElementById('search-field');
+    const searchForm = document.querySelector('.search-form');
+
+    searchForm.addEventListener('submit', function(e) {
+      const value = searchInput.value.trim();
+      if (value !== '') {
+        if (isNumeric(value)) {
+          searchField.value = 'consumption';
+        } else {
+          searchField.value = 'name';
+        }
+      }
+    });
+
+    function isNumeric(str) {
+      return !isNaN(parseFloat(str)) && isFinite(str);
+    }
+  });
+</script>
+</body>
+</html>
