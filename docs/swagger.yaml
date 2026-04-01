@@ -1,0 +1,1010 @@
+basePath: /
+definitions:
+  serializer.CartJSON:
+    properties:
+      consumption_id:
+        type: integer
+      modes_count:
+        type: integer
+    type: object
+  serializer.FinishJSON:
+    properties:
+      status:
+        type: string
+    type: object
+  serializer.FuelConsumptionDetailJSON:
+    properties:
+      consumption_id:
+        type: integer
+      creator_login:
+        type: string
+      date_completed:
+        type: string
+      date_create:
+        type: string
+      date_formed:
+        type: string
+      destination:
+        type: string
+      entries:
+        items:
+          $ref: '#/definitions/serializer.FuelConsumptionEntryViewJSON'
+        type: array
+      fuel_price:
+        type: number
+      moderator_login:
+        type: string
+      origin:
+        type: string
+      status:
+        type: string
+      total_saved:
+        description: ✅ Остался float64
+        type: number
+    type: object
+  serializer.FuelConsumptionEntryViewJSON:
+    properties:
+      base_consumption:
+        type: number
+      economy_percent:
+        type: number
+      fuel_saved:
+        type: number
+      id:
+        type: integer
+      image_key:
+        type: string
+      mode_id:
+        type: integer
+      mode_name:
+        type: string
+      route_distance:
+        type: integer
+    type: object
+  serializer.FuelConsumptionListJSON:
+    properties:
+      consumption_id:
+        type: integer
+      creator_login:
+        type: string
+      date_completed:
+        type: string
+      date_create:
+        type: string
+      date_formed:
+        type: string
+      destination:
+        type: string
+      fuel_entries_count:
+        type: integer
+      fuel_price:
+        type: number
+      moderator_login:
+        type: string
+      origin:
+        type: string
+      status:
+        type: string
+      total_saved:
+        description: ✅ Остался float64 (не *float64)
+        type: number
+    type: object
+  serializer.FuelConsumptionModeUpdateJSON:
+    properties:
+      fuel_saved:
+        type: number
+      route_distance:
+        type: integer
+      sort_order:
+        type: integer
+    type: object
+  serializer.FuelConsumptionUpdateJSON:
+    properties:
+      destination:
+        type: string
+      fuel_price:
+        type: number
+      origin:
+        type: string
+    type: object
+  serializer.ModeJSON:
+    properties:
+      base_consumption:
+        type: number
+      description:
+        type: string
+      driving_type:
+        type: string
+      economy_percent:
+        type: number
+      image_key:
+        type: string
+      is_active:
+        type: boolean
+      mode_id:
+        type: integer
+      mode_name:
+        type: string
+      video_key:
+        type: string
+    type: object
+  serializer.UserJSON:
+    properties:
+      id:
+        type: integer
+      is_moderator:
+        type: boolean
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для расчёта экономии топлива
+  title: Cruise control API
+  version: "1.0"
+paths:
+  /api/Modes:
+    post:
+      consumes:
+      - multipart/form-data
+      description: multipart/form-data или application/json; только для модераторов
+      parameters:
+      - description: Название режим
+        in: formData
+        name: Mode_title
+        type: string
+      - description: Коэффициент материала
+        in: formData
+        name: Mode_material_coefficient
+        type: number
+      - description: Коэффициент толщины
+        in: formData
+        name: Mode_thickness_coefficient
+        type: number
+      - description: Описание
+        in: formData
+        name: description
+        type: string
+      - description: Фото режима
+        in: formData
+        name: photo
+        type: file
+      - description: Видео режима
+        in: formData
+        name: video
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/serializer.ModeJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Требуется роль модератора
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Создать режим
+      tags:
+      - Modes
+  /api/fuel-consumption-modes/{mode_id}/{consumption_id}:
+    delete:
+      parameters:
+      - description: ID режима
+        in: path
+        name: mode_id
+        required: true
+        type: integer
+      - description: ID заявки
+        in: path
+        name: consumption_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Обновлённая заявка
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionListJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Удалить режим из заявки
+      tags:
+      - fuel-consumption-modes
+    put:
+      consumes:
+      - application/json
+      description: Дистанция маршрута для пары режим–заявка.
+      parameters:
+      - description: ID режима
+        in: path
+        name: mode_id
+        required: true
+        type: integer
+      - description: ID заявки
+        in: path
+        name: consumption_id
+        required: true
+        type: integer
+      - description: Поля для обновления
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.FuelConsumptionModeUpdateJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionModeUpdateJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Обновить запись в заявке
+      tags:
+      - fuel-consumption-modes
+  /api/fuel-consumption-modes/add/{mode_id}:
+    post:
+      description: Добавляет режим в черновик заявки; при первом добавлении создаётся
+        заявка (201 + Location). Поддерживает JSON и form-data.
+      parameters:
+      - description: ID режима
+        in: path
+        name: mode_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно добавлено
+          schema:
+            additionalProperties: true
+            type: object
+        "201":
+          description: Заявка создана
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Уже в заявке
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Добавить режим в заявку
+      tags:
+      - fuel-consumption-modes
+  /api/fuel-consumptions:
+    get:
+      description: Фильтры по дате и статусу. Пользователь видит свои; модератор —
+        все.
+      parameters:
+      - description: Начало диапазона даты (YYYY-MM-DD)
+        in: query
+        name: created_at
+        type: string
+      - description: Конец диапазона даты (YYYY-MM-DD)
+        in: query
+        name: date_completed
+        type: string
+      - description: Фильтр по статусу
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/serializer.FuelConsumptionListJSON'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Список заявок на проверку экономии
+      tags:
+      - fuel_consumptions
+  /api/fuel_consumptions/{id}:
+    delete:
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'status: deleted'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Удалить заявку
+      tags:
+      - fuel_consumptions
+    get:
+      description: 'Данные по заявке; доступ: создатель или модератор.'
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionDetailJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Заявка по ID
+      tags:
+      - fuel_consumptions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Поля для обновления
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.FuelConsumptionUpdateJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionListJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Обновить заявку
+      tags:
+      - fuel_consumptions
+  /api/fuel_consumptions/{id}/finish:
+    put:
+      consumes:
+      - application/json
+      description: Установка итогового статуса; только для модератора.
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Статус завершения
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.FinishJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionListJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Завершить заявку
+      tags:
+      - fuel_consumptions
+  /api/fuel_consumptions/{id}/form:
+    put:
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.FuelConsumptionListJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Оформить заявку
+      tags:
+      - fuel_consumptions
+  /api/fuel_consumptions/cart:
+    get:
+      description: Если черновика нет — возвращает статус "no_draft".
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: CartJSON (tire_pressure_id, tires_count) или no_draft
+          schema:
+            $ref: '#/definitions/serializer.CartJSON'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Корзина (черновик заявки)
+      tags:
+      - fuel_consumptions
+  /api/modes:
+    get:
+      parameters:
+      - description: Поиск по названию режима
+        in: query
+        name: query
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/serializer.ModeJSON'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Список режимов
+      tags:
+      - Modes
+  /api/modes/{id}:
+    get:
+      parameters:
+      - description: ID режима
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/serializer.ModeJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: режим по ID
+      tags:
+      - Modes
+  /api/users/signin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин и пароль
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.UserJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user + token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Неверный логин или пароль
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Вход
+      tags:
+      - auth
+  /api/users/signout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'status: signed_out'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Выход
+      tags:
+      - auth
+  /api/users/signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/serializer.UserJSON'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/serializer.UserJSON'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Пользователь уже существует
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация
+      tags:
+      - auth
+  /fuel-consumption-modes/:id:
+    get:
+      description: 'Состав конструкций; доступ: создатель или модератор.'
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/serializer.FuelConsumptionEntryViewJSON'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Список м-м в заявке
+      tags:
+      - fuel-consumption-modes
+  /fuel_consumption/{id}:
+    get:
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: HTML-страница заявки
+          schema:
+            type: string
+        "302":
+          description: Редирект при ошибке или отсутствии доступа
+      summary: Страница заявки на проверку экономии
+      tags:
+      - fuel_consumption-html
+  /mode/{id}:
+    get:
+      parameters:
+      - description: ID режима
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: HTML-страница
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Страница режима по ID
+      tags:
+      - modes-html
+  /modes:
+    get:
+      parameters:
+      - description: Поиск по названию режима
+        in: query
+        name: query
+        type: string
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: HTML-страница
+          schema:
+            type: string
+      summary: Главная страница (типы движения)
+      tags:
+      - mode-html
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

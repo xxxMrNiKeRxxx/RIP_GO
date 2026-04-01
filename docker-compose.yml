@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  # ─── MinIO (простая конфигурация из Лабы 2) ───────────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: cruise-control-minio
+    ports:
+      - "9000:9000"   # API
+      - "9001:9001"   # Console
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio124
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # ─── MinIO Setup (создаёт бакет и делает публичным) ───────────────────────
+  minio-setup:
+    image: minio/mc:latest
+    container_name: cruise-control-minio-setup
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 minio minio124;
+      mc mb myminio/services --ignore-existing;
+      mc anonymous set download myminio/services;
+      echo 'MinIO setup complete!';
+      exit 0;
+      "
+    networks:
+      - app_network
+
+  # ─── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:17
+    container_name: cruise-control-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cruise_control_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  # ─── Adminer (для управления БД) ───────────────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: cruise-control-adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    restart: unless-stopped
+    networks:
+      - app_network
+
+# ─── Volumes ─────────────────────────────────────────────────────────────────
+volumes:
+  minio-data:
+  postgres-data:
+
+# ─── Networks ────────────────────────────────────────────────────────────────
+networks:
+  app_network:
+    driver: bridge
